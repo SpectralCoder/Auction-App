@@ -1,5 +1,6 @@
 from .models import *
 import datetime
+from django.db.models import Max
 
 def saveUser(mail):
     try:
@@ -18,6 +19,35 @@ def saveItem(name, bid, des, date, pic, owner):
 def getItem():
     x= Item.objects.all().filter(date__gte = datetime.date.today())
     return x
+
+def getMyItem(owner):
+    x=Item.objects.all().filter(owner=owner)
+    return x
+
+def getProduct(id):
+    x=Item.objects.all().filter(id=id)
+    return x
+
+def getBid(id):
+    biddata= bid.objects.all().filter(post=id)
+    return biddata
+
+def getHighBid(id):
+    highbid= bid.objects.filter(post=id).order_by('-amount').first()
+    return highbid
+
+def getMyBid(id, post):
+    mybid= bid.objects.all().filter(bidder=id, post=post).first()
+    return mybid
+
+def SaveBid(amount, post, bidder ):
+    try:
+        l=bid.objects.get(bidder= bidder, post=post)
+        l.amount=amount
+        l.save() 
+    except:
+        q=bid(amount=amount, post=post, bidder=bidder)
+        q.save()
 
 
 

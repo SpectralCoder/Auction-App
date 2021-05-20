@@ -14,3 +14,8 @@ class Item(models.Model):
     picture = models.ImageField(upload_to='images/', null=True, blank=True)
     date = models.DateField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class bid(models.Model):
+    amount= models.DecimalField(max_digits=20, decimal_places=2)
+    post= models.ForeignKey(Item, on_delete=models.CASCADE)
+    bidder= models.ForeignKey(User, on_delete=models.CASCADE)

@@ -9,3 +9,6 @@ class ItemForm(forms.Form):
     description= forms.CharField(max_length=1000)
     picture = forms.ImageField()
     date= forms.DateField()
+
+class BidForm(forms.Form):
+    amount= forms.IntegerField()
