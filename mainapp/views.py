@@ -76,8 +76,9 @@ def savebid(request, id):
             postinfo= Item.objects.get(id=id)
             owner=User.objects.get(id=request.session['id'])
             mybid=data.cleaned_data['amount']
-            # checking if input is Valid
+           
             highestbid= logics.getHighBid(postinfo)
+             # checking if input is Valid
             if (highestbid is None and mybid > postinfo.minbid and postinfo.date >= datetime.date.today() ):
                 logics.SaveBid(mybid,  postinfo, owner)
 
