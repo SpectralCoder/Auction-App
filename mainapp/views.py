@@ -6,13 +6,16 @@ from .models import *
 import datetime
 
 # Create your views here.
+#View for login
 def loginview(request):
     return render(request, 'login.html')
 
+#homepage view
 def homeview(request):
     x=logics.getItem()
     return render(request, 'home.html',{"ItemData" : x})
 
+#redirecting to homepage if one is logged in
 def verifylogin(request):
     x=logics.getItem()
     data = myform.MyForm(request.POST)
@@ -24,9 +27,11 @@ def verifylogin(request):
         request.session['email']=email
         return render(request, 'home.html', {"ItemData" : x})
 
+#showing form for new item
 def additemview(request):
     return render(request, 'auctionItem.html')
 
+#if form is valid than saving it and redirecting to homepage
 def checkitem(request):
     x=logics.getItem()
     if request.method == 'POST':
@@ -43,11 +48,13 @@ def checkitem(request):
         return render(request, 'auctionItem.html')
     return HttpResponseForbidden('allowed only via POST')
 
+#view for showing users posted items
 def myitem(request):
     owner=User.objects.get(id=request.session['id'])
     x=logics.getMyItem(owner)
     return render(request, 'home.html',{"ItemData" : x})
 
+#view for showing any individual item details
 def individualdetails(request, id):
     owner=User.objects.get(id=request.session['id'])
     postinfo= Item.objects.get(id=id)
@@ -59,7 +66,7 @@ def individualdetails(request, id):
         return render(request, 'productdetailsold.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
     return render(request, 'productdetails.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
 
-
+#view for saving the bid
 def savebid(request, id):
     
     if request.method == 'POST':
