@@ -17,3 +17,10 @@ It is for saving images into datatbase.
 It is for WSGI HTTP server.
 ### whitenoise
 It is for showing static files in server
+
+## ISSUES
+##### While sending files using form it is required to have 'enctype="multipart/form-data"' in form attribute in django template.
+##### Media urls should be set for showing static images.
+##### For foreign key query in models, objects are needed not just a value. 
+##### Changing admin template is kinda scary, enlighten me 🩹
+##### Static images aren't rendered in heroku.
