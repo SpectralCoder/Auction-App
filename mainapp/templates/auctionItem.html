@@ -3,6 +3,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
+  {% include "nav.html" %}
+  <div class="container">
     <form class="row g-3" action= "{% url 'checkformdata' %}" method="POST" enctype="multipart/form-data" >
       {% csrf_token %}
         <div class="col-md-6">
@@ -26,9 +28,10 @@
           <input type="date" class="form-control" id="inputdate" name="date">
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
         </div>
       </form>
+    </div>
 
 
 

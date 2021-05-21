@@ -1,49 +1,70 @@
+
 <!DOCTYPE html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'homeview' %}">Home</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dashboard
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="{% url 'additem' %}">Create/Add</a></li>
-                  
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{% url 'myitem' %}">My posted Items</a></li>
-                </ul>
-              </li>
-            </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </nav>
-      {% for item in ItemData %}
+     {% include "nav.html" %}
+     <!-- <div class="pb-4"></div> -->
+     <div class="container">
       
+      <div class="row">
+     {% for item in ItemData %}
+     
+        <div class="col-4"><div class="d-flex justify-content-center pb-3 ">
+          <div class="card" style="width: 30rem;">
+            <img src="{{ item.picture.url }}" class="card-img-top img-fluid"  style="width:auto; height: 300px;" alt="...">
+            <div class="card-body">
+              
+              <div class="container pb-2">
+                <h5 class="card-title">{{item.proname}}</h5>
+                  <div class="row">
+                    <div class="col">
+                     Last Date: {{item.date}}
+                    </div>
+                    <div class="col">
+                      Minimum Bid: {{item.minbid}}
+                    </div>
+                  </div>
+              </div>
+              <div class="d-flex justify-content-center">
+              <a href='{% url "itemview" id=item.id%}' class="btn btn-primary btn-block w-100">View details</a>
+            </div>
+            </div>
+          </div>
+        </div></div>
+      
+    {% endfor %}
+  </div>
+      
+
+</div>
+
+      <!-- {% for item in ItemData %}
+      <div class="d-flex justify-content-center pb-3 ">
       <div class="card" style="width: 30rem;">
         <img src="{{ item.picture.url }}" class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title">{{item.proname}}</h5>
-          <div>
-            <span>Last Date: {{item.date}} </span>
-            <span>Minimum Bid: {{item.minbid}} </span>
+          
+          <div class="container pb-2">
+            <h5 class="card-title">{{item.proname}}</h5>
+              <div class="row">
+                <div class="col">
+                 Last Date: {{item.date}}
+                </div>
+                <div class="col">
+                  Minimum Bid: {{item.minbid}}
+                </div>
+              </div>
           </div>
-          <a href='{% url "itemview" id=item.id%}' class="btn btn-primary">View details</a>
+          <div class="d-flex justify-content-center">
+          <a href='{% url "itemview" id=item.id%}' class="btn btn-primary btn-block w-100">View details</a>
+        </div>
         </div>
       </div>
+    </div> -->
       
-      {% endfor %}
+      <!-- {% endfor %} -->
 
 
 

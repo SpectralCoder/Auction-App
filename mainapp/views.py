@@ -5,7 +5,6 @@ from . import logics
 from .models import *
 import datetime
 
-
 # Create your views here.
 def loginview(request):
     return render(request, 'login.html')
@@ -56,7 +55,8 @@ def individualdetails(request, id):
     itembid =logics.getBid(postinfo)
     highestbid= logics.getHighBid(postinfo)
     mybid= logics.getMyBid(owner,postinfo)
-    
+    if (postinfo.date < datetime.date.today()):
+        return render(request, 'productdetailsold.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
     return render(request, 'productdetails.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
 
 

@@ -29,14 +29,7 @@
           </div>
         </div>
         <div class="pb-2"></div>
-        <form class="form-inline" action= "{% url 'savebid' id=item.id %}" method="POST" >
-          {% csrf_token %}
-          <div class="form-group mx-sm-3 mb-2">
-           <div class="pb-1">
-              <input type="Number" class="form-control" id="inputPassword2" name="amount" placeholder="Input your bid, please!">
-           </div>
-            <button type="submit" class="btn btn-outline-success w-100 mb-2">Confirm</button>
-        </form>
+
         {% endfor %}
         {% if BidData == none %}
         <div> No one bid yet</div>
@@ -48,7 +41,7 @@
               Highest Bid {{ high.amount }}
             </div>
             <div class="col-8">
-              Bidder: {{ high.bidder}}
+              Winner: {{ high.bidder}}
             </div>
             <div> <span>Your Current Bid: 0 </span></div>
           </div>
@@ -57,11 +50,11 @@
         {% elif my %}
         <div class="container">
           <div class="row">
-            <div class="col-4">
+            <div class="col-5">
               Highest Bid {{ high.amount }}
             </div>
-            <div class="col-8">
-              Bidder: {{ high.bidder}}
+            <div class="col-7">
+              Winner: {{ high.bidder}}
             </div>
             <div> <span>Your Current Bid: {{ my.amount}} </span></div>
           </div>
@@ -75,7 +68,7 @@
   <div class="container">
     <div class="row">
       <div class="col-8">
-        Bidder:{{item.bidder}}
+        Bidder: {{item.bidder}}
       </div>
       <div class="col-4">
         Bid: {{item.amount}}

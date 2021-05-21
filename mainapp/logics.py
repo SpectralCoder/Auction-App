@@ -44,10 +44,17 @@ def SaveBid(amount, post, bidder ):
     try:
         l=bid.objects.get(bidder= bidder, post=post)
         l.amount=amount
-        l.save() 
+        l.save()
+        g=Item.objects.get(id=post.id)
+        g.winner=bidder
+        g.save()
+
     except:
         q=bid(amount=amount, post=post, bidder=bidder)
         q.save()
+        g=Item.objects.get(id=post.id)
+        g.winner=bidder
+        g.save()
 
 
 

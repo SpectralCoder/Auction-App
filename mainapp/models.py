@@ -13,7 +13,7 @@ class Item(models.Model):
     description = models.CharField(max_length=2000, null=True,)
     picture = models.ImageField(upload_to='images/', null=True, blank=True)
     date = models.DateField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,related_name='%(class)s_requests_created')
 
 class bid(models.Model):
     amount= models.DecimalField(max_digits=20, decimal_places=2)
