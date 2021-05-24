@@ -108,6 +108,7 @@ def savebid(request, id):
         return HttpResponseForbidden('Data not valid')
     return HttpResponseForbidden('allowed only via POST')
 
+# View for admin gallery view
 class AdminView(LoginRequiredMixin, TemplateView):
     template_name = 'admin/home.html'
     x=logics.getItem()
@@ -115,6 +116,7 @@ class AdminView(LoginRequiredMixin, TemplateView):
         
         return render(self.request, self.template_name,{"ItemData" : self.x})
 
+#Admin itemview
 class AdminItem(LoginRequiredMixin, TemplateView):
     template_name = 'admin/home.html'
     x=logics.getItemall()
@@ -122,6 +124,7 @@ class AdminItem(LoginRequiredMixin, TemplateView):
         
         return render(self.request, self.template_name,{"ItemData" : self.x})
 
+#admin stats view
 class AdminStat(LoginRequiredMixin, TemplateView):
     template_name = 'admin/stats.html'
     itemcount=logics.getItemCount()
