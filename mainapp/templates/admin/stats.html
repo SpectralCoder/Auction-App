@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    </head>
+
+    <body>
+        {% include "admin/nav.html" %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-6 container">
+                    <div class="row">
+                        <div class="col-8 align-content-center">
+                            Running Auctions: 
+                        </div>
+                        <div class="col-4">
+                            {{count}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 container">
+                    <div class="row">
+                        <div class="col-8">
+                            Total Value:
+                        </div>
+                        <div class="col-4">
+                            {{auctionvalue}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                <canvas id="myChart" ></canvas>
+                <script>
+                var ctx = document.getElementById('myChart').getContext('2d');
+        
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: JSON.parse("{{ labels }}"),
+                        datasets: [{
+                            label: 'Added',
+                            data: JSON.parse("{{ created }}"),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Completed',
+                            data: JSON.parse("{{ auctioned }}"),
+                            backgroundColor: [
+                                'rgba(5, 0, 0, 0.2)',
+                                'rgba(150, 0, 0, 0.2)',
+                                'rgba(150, 0, 0, 0.2)',
+                                'rgba(150, 0, 0, 0.2)',
+                                'rgba(150, 0, 0, 0.2)',
+                                'rgba(150, 0, 0, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(0, 99, 132, 1)',
+                                'rgba(0, 162, 235, 1)',
+                                'rgba(0, 206, 86, 1)',
+                                'rgba(0, 192, 192, 1)',
+                                'rgba(0, 102, 255, 1)',
+                                'rgba(0, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                </script>
+
+                </div>
+                <div class="col-6">
+                    <canvas id="myChart2" ></canvas>
+                <script>
+                var ctx = document.getElementById('myChart2');
+        
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: JSON.parse("{{ labels }}"),
+                        datasets: [{
+                            label: 'Totol Value',
+                            data: JSON.parse("{{ totalvalue }}"),
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                </script>
+                </div>
+            </div>
+        </div>
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    </body>
+</html>

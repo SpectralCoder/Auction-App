@@ -4,6 +4,10 @@ from . import myform
 from . import logics
 from .models import *
 import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import (
+    View,TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView)
+import json
 
 # Create your views here.
 #View for login
@@ -56,13 +60,16 @@ def myitem(request):
 
 #view for showing any individual item details
 def individualdetails(request, id):
+    print("ID is", id)
     owner=User.objects.get(id=request.session['id'])
     postinfo= Item.objects.get(id=id)
     iteminfo= logics.getProduct(id)
     itembid =logics.getBid(postinfo)
     highestbid= logics.getHighBid(postinfo)
     mybid= logics.getMyBid(owner,postinfo)
-    if (postinfo.date < datetime.date.today()):
+    print("Here it is")
+    print(postinfo.date)
+    if (postinfo.date.date() < datetime.date.today()):
         return render(request, 'productdetailsold.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
     return render(request, 'productdetails.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
 
@@ -79,7 +86,7 @@ def savebid(request, id):
            
             highestbid= logics.getHighBid(postinfo)
              # checking if input is Valid
-            if (highestbid is None and mybid > postinfo.minbid and postinfo.date >= datetime.date.today() ):
+            if (highestbid is None and mybid > postinfo.minbid and postinfo.date.date() >= datetime.date.today() ):
                 logics.SaveBid(mybid,  postinfo, owner)
 
                 iteminfo= logics.getProduct(id)
@@ -89,7 +96,7 @@ def savebid(request, id):
                 return render(request, 'productdetails.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
             
 
-            elif(mybid > highestbid.amount and mybid > postinfo.minbid and postinfo.date >= datetime.date.today()):
+            elif(mybid > highestbid.amount and mybid > postinfo.minbid and postinfo.date.date() >= datetime.date.today()):
                 logics.SaveBid(mybid,  postinfo, owner)
 
                 iteminfo= logics.getProduct(id)
@@ -101,4 +108,49 @@ def savebid(request, id):
         return HttpResponseForbidden('Data not valid')
     return HttpResponseForbidden('allowed only via POST')
 
+class AdminView(LoginRequiredMixin, TemplateView):
+    template_name = 'admin/home.html'
+    x=logics.getItem()
+    def get(self, request, *args, **kwargs):
+        
+        return render(self.request, self.template_name,{"ItemData" : self.x})
+
+class AdminItem(LoginRequiredMixin, TemplateView):
+    template_name = 'admin/home.html'
+    x=logics.getItemall()
+    def get(self, request, *args, **kwargs):
+        
+        return render(self.request, self.template_name,{"ItemData" : self.x})
+
+class AdminStat(LoginRequiredMixin, TemplateView):
+    template_name = 'admin/stats.html'
+    itemcount=logics.getItemCount()
+    itemvalue=logics.getItemValue()
     
+    start_date = datetime.datetime.now()-datetime.timedelta(days=7)
+    end_date = datetime.datetime.now()
+    delta = datetime.timedelta(days=1)
+    created=[]
+    auctioned=[]
+    labels=[]
+    totalauction=[]
+    count=7
+    while start_date <= end_date:
+        
+        created.append(logics.totalCreated(start_date))
+        auctioned.append(logics.totalAuctioned(start_date))
+        totalauction.append(logics.totalAuctionValue(start_date))
+        labels.append(count)
+        start_date += delta
+
+        count=count-1
+    # created=json.dumps(created)
+    # auctioned=json.dumps(auctioned)
+    # labels=json.dumps(labels)
+    # totalauction=json.dumps(totalauction)
+    def get(self, request, *args, **kwargs):
+        
+        return render(self.request, self.template_name,{"count" : self.itemcount, 
+        "auctionvalue": self.itemvalue, "created": self.created, "labels":self.labels,
+        "auctioned":self.auctioned,
+        "totalvalue": self.totalauction })

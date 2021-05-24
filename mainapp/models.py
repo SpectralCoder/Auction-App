@@ -12,10 +12,12 @@ class Item(models.Model):
     minbid = models.DecimalField(max_digits=20, decimal_places=2)
     description = models.CharField(max_length=2000, null=True,)
     picture = models.ImageField(upload_to='images/', null=True, blank=True)
-    date = models.DateField()
+    created = models.DateTimeField()
+    date = models.DateTimeField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE,related_name='%(class)s_requests_created')
 
 class bid(models.Model):
-    amount= models.DecimalField(max_digits=20, decimal_places=2)
-    post= models.ForeignKey(Item, on_delete=models.CASCADE)
-    bidder= models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=20, decimal_places=2)
+    post = models.ForeignKey(Item, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField()
