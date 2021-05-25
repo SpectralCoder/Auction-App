@@ -127,33 +127,33 @@ class AdminItem(LoginRequiredMixin, TemplateView):
 #admin stats view
 class AdminStat(LoginRequiredMixin, TemplateView):
     template_name = 'admin/stats.html'
-    itemcount=logics.getItemCount()
-    itemvalue=logics.getItemValue()
     
-    start_date = datetime.datetime.now()-datetime.timedelta(days=7)
-    end_date = datetime.datetime.now()
-    delta = datetime.timedelta(days=1)
-    created=[]
-    auctioned=[]
-    labels=[]
-    totalauction=[]
-    count=7
-    while start_date <= end_date:
-        
-        created.append(logics.totalCreated(start_date))
-        auctioned.append(logics.totalAuctioned(start_date))
-        totalauction.append(logics.totalAuctionValue(start_date))
-        labels.append(count)
-        start_date += delta
+    
 
-        count=count-1
-    # created=json.dumps(created)
-    # auctioned=json.dumps(auctioned)
-    # labels=json.dumps(labels)
-    # totalauction=json.dumps(totalauction)
+  
     def get(self, request, *args, **kwargs):
+        itemcount=logics.getItemCount()
+        itemvalue=logics.getItemValue()
         
-        return render(self.request, self.template_name,{"count" : self.itemcount, 
-        "auctionvalue": self.itemvalue, "created": self.created, "labels":self.labels,
-        "auctioned":self.auctioned,
-        "totalvalue": self.totalauction })
+        start_date = datetime.datetime.now()-datetime.timedelta(days=7)
+        end_date = datetime.datetime.now()
+        delta = datetime.timedelta(days=1)
+        created=[]
+        auctioned=[]
+        labels=[]
+        totalauction=[]
+        count=7
+        while start_date <= end_date:
+            
+            created.append(logics.totalCreated(start_date))
+            auctioned.append(logics.totalAuctioned(start_date))
+            totalauction.append(logics.totalAuctionValue(start_date))
+            labels.append(count)
+            start_date += delta
+
+            count=count-1
+            
+        return render(self.request, self.template_name,{"count" : itemcount, 
+        "auctionvalue": itemvalue, "created": created, "labels":labels,
+        "auctioned":auctioned,
+        "totalvalue": totalauction })
