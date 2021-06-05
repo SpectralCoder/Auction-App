@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class MyForm(forms.Form):
     email=forms.EmailField()
@@ -12,3 +14,8 @@ class ItemForm(forms.Form):
 
 class BidForm(forms.Form):
     amount= forms.IntegerField()
+
+class CreateUserForm(UserCreationForm):
+	class Meta:
+		model = User
+		fields = ['username', 'email', 'password1', 'password2']

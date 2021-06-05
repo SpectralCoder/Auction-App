@@ -1,0 +1,49 @@
+<!-- This template is for creating new item -->
+
+<!DOCTYPE html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+  {% include "nav.html" %}
+  <div class="container">
+    <form class="row g-3" action= "" method="POST" enctype="multipart/form-data" >
+      {% csrf_token %}
+        <div class="col-md-6">
+          <label for="inputName4" class="form-label">Product Name</label>
+          <input type="text" class="form-control" id="inputName4" name="proname" value="{{ item.proname }}">
+        </div>
+        <div class="col-md-6">
+          <label for="inputNumber4" class="form-label">Minimum Bid</label>
+          <input type="number" class="form-control" id="inputBid4" name="minbid" value="{{ item.minbid }}>
+        </div>
+        <div class="col-12">
+          <label for="inputDescription" class="form-label">Description</label>
+          <input type="text" class="form-control" id="inputDescription" name="description" value="{{ item.description }}>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="customFile">Upload Picture</label>
+            <input type="file" class="form-control" id="customFile" name="picture" value="{{ item.picture }} required/>
+        </div>
+        <div class="col-md-6">
+          <label for="inputDate" class="form-label">End Date</label>
+          <input type="date" class="form-control" id="inputdate" name="date" value="{{ item.date }}>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </div>
+      </form>
+    </div>
+
+
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+  </html>

@@ -14,8 +14,46 @@
         <div class="card-body">
           
           <div class="container">
-            <h5 class="card-title">Title: {{item.proname}}</h5>
-            <div class="row">
+            <h5 class="card-title d-flex justify-content-center">Title: {{item.proname}}</h5>
+            <div class="row d-flex justify-content-center">
+              {% if item.owner.id == request.user.id %}
+                    
+                     <div class="col-12">
+                      <!-- <a href='{% url "delete" id=item.id %}' class="ml-2">
+                      <button class="btn btn-outline-success w-100">
+                        Delete
+                        </button>
+                      </a> -->
+                      <button type="button" class="btn btn-outline-success w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Delete
+                      </button>
+
+                      <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Warning!!!</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are You Sure?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <a href='{% url "delete" id=item.id %}' class="ml-2">
+                      <button class="btn btn-outline-danger w-100">
+                        Delete
+                        </button>
+                      </a>
+      </div>
+    </div>
+  </div>
+</div>
+                     </div>
+                     <div class="pb-2"></div>
+                    {% endif %}
+                    
               <div class="col">
                Last Date: {{item.date}}
               </div>
@@ -23,11 +61,14 @@
                 Minimum Bid: {{item.minbid}}
               </div>
             </div>
+            <div class="pb-2"></div>
           <div>
               Description: {{item.description}}
 
           </div>
+          <div class="pb-2"></div>
         </div>
+        {% if item.owner.id != request.user.id %}
         <div class="pb-2"></div>
         <form class="form-inline" action= "{% url 'savebid' id=item.id %}" method="POST" >
           {% csrf_token %}
@@ -37,23 +78,28 @@
            </div>
             <button type="submit" class="btn btn-outline-success w-100 mb-2">Confirm</button>
         </form>
+        {% endif %}
         {% endfor %}
-        {% if BidData == none %}
-        <div> No one bid yet</div>
-      {% elif BidData %}
-        {% if my == none %}
-        <div class="container">
-          <div class="row">
-            <div class="col-4">
-              Highest Bid {{ high.amount }}
-            </div>
-            <div class="col-8">
-              Bidder: {{ high.bidder}}
-            </div>
+        
+        {% if BidData %}
+          {% if my == none %}
+            <div class="container">
+              <div class="row">
+                <div class="col-5">
+                   Highest Bid {{ high.amount }}
+                </div>
+              <div class="col-7">
+                Bidder: {{ high.bidder}}
+              </div>
+              {% for item in ItemData %}
+              {% if item.owner.id != request.user.id %}
+              
             <div> <span>Your Current Bid: 0 </span></div>
+              {% endif %}
+              {% endfor %}
           </div>
         </div>
-        
+        <div class="pb-2"></div>
         {% elif my %}
         <div class="container">
           <div class="row">
@@ -67,26 +113,25 @@
           </div>
         </div>
         {% endif %}
+        <button class="btn btn-dark w-100 mb-2 " disabled>All the Bids</button>
+        {% else %}
+        <div class="d-flex justify-content-center"><button type="button" class="btn btn-danger">No one bidded yet.</button></div>
       {% endif %}
 
-      <button class="btn btn-dark w-100 mb-2 " disabled>All the Bids</button>
+      
 
   {% for item in BidData%}
   <div class="container">
     <div class="row">
       <div class="col-8">
-        Bidder:{{item.bidder}}
+        Bidder: {{item.bidder}}
       </div>
       <div class="col-4">
         Bid: {{item.amount}}
       </div>
     </div>
   </div>
-  {% endfor %}
-
-
-     
-
+{% endfor %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
   </html>

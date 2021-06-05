@@ -4,11 +4,13 @@ from django.contrib.auth import views as auth_views
 from .views import (
     AdminView, AdminItem, AdminStat
 )
+from django.contrib.admin.views.decorators import staff_member_required
+
 
 
 urlpatterns = [
     #regular User
-    path('', views.loginview, name="loginpage"),
+    path('', views.homeview, name="homeview"),
 
     #Adding auction form
     path('addAuction/', views.additemview, name="additem"),
@@ -25,9 +27,6 @@ urlpatterns = [
     #individual auction data 
     path('itemdetails/<int:id>' , views.individualdetails, name = 'itemview'),
 
-    #GalleryView
-    path('home/', views.homeview, name="homeview"),
-
     #saving bids for any individual item
     path('savebid/<int:id>', views.savebid, name="savebid"),
 
@@ -35,13 +34,18 @@ urlpatterns = [
     path( 'admin/', auth_views.LoginView.as_view(), name="login"),
     
     #Admin home
-    path('admin/home/', AdminView.as_view(), name="adminhome"),
+    path('admin/home/', staff_member_required(AdminView.as_view()), name="adminhome"),
 
     #viewing all the items
-    path('admin/item/', AdminItem.as_view(), name="adminitem"),
+    path('admin/item/', staff_member_required(AdminItem.as_view()), name="adminitem"),
 
     #stat page
-    path('admin/stat/', AdminStat.as_view(), name="adminstat"),
+    path('admin/stat/', staff_member_required(AdminStat.as_view()), name="adminstat"),
     
+    path('register/', views.registerPage, name="register"),
+	path('login/', views.loginPage, name="login"),  
+	path('logout/', views.logoutUser, name="logout"),
+
+    path('deleteitem/<int:id>' , views.deleteitem, name = 'delete'),
     
 ]

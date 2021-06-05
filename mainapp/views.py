@@ -9,17 +9,26 @@ from django.views.generic import (
     View,TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView)
 import json
 
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib import messages
+
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 #View for login
+@login_required(login_url='login')
 def loginview(request):
     return render(request, 'login.html')
 
 #homepage view
+@login_required(login_url='login')
 def homeview(request):
     x=logics.getItem()
     return render(request, 'home.html',{"ItemData" : x})
 
 #redirecting to homepage if one is logged in
+@login_required(login_url='login')
 def verifylogin(request):
     x=logics.getItem()
     data = myform.MyForm(request.POST)
@@ -32,16 +41,18 @@ def verifylogin(request):
         return render(request, 'home.html', {"ItemData" : x})
 
 #showing form for new item
+@login_required(login_url='login')
 def additemview(request):
     return render(request, 'auctionItem.html')
 
 #if form is valid than saving it and redirecting to homepage
+@login_required(login_url='login')
 def checkitem(request):
     x=logics.getItem()
     if request.method == 'POST':
         data=myform.ItemForm(request.POST, request.FILES)
         if data.is_valid():
-            owner=User.objects.get(id=request.session['id'])
+            owner=User.objects.get(id=request.user.id)
             proname=data.cleaned_data['proname']
             minbid=data.cleaned_data['minbid']
             description=data.cleaned_data['description']
@@ -53,15 +64,16 @@ def checkitem(request):
     return HttpResponseForbidden('allowed only via POST')
 
 #view for showing users posted items
+@login_required(login_url='login')
 def myitem(request):
-    owner=User.objects.get(id=request.session['id'])
+    owner=User.objects.get(id=request.user.id)
     x=logics.getMyItem(owner)
     return render(request, 'home.html',{"ItemData" : x})
 
 #view for showing any individual item details
+@login_required(login_url='login')
 def individualdetails(request, id):
-    print("ID is", id)
-    owner=User.objects.get(id=request.session['id'])
+    owner=User.objects.get(id=request.user.id)
     postinfo= Item.objects.get(id=id)
     iteminfo= logics.getProduct(id)
     itembid =logics.getBid(postinfo)
@@ -74,6 +86,7 @@ def individualdetails(request, id):
     return render(request, 'productdetails.html',{"ItemData" : iteminfo, "BidData": itembid,"high": highestbid, "my":mybid})
 
 #view for saving the bid
+@login_required(login_url='login')
 def savebid(request, id):
     
     if request.method == 'POST':
@@ -81,7 +94,7 @@ def savebid(request, id):
 
         if data.is_valid():
             postinfo= Item.objects.get(id=id)
-            owner=User.objects.get(id=request.session['id'])
+            owner=User.objects.get(id=request.user.id)
             mybid=data.cleaned_data['amount']
            
             highestbid= logics.getHighBid(postinfo)
@@ -157,3 +170,54 @@ class AdminStat(LoginRequiredMixin, TemplateView):
         "auctionvalue": itemvalue, "created": created, "labels":labels,
         "auctioned":auctioned,
         "totalvalue": totalauction })
+
+def registerPage(request):
+	if request.user.is_authenticated:
+		return redirect('homeview')
+	else:
+		form = myform.CreateUserForm()
+		if request.method == 'POST':
+			form = myform.CreateUserForm(request.POST)
+			if form.is_valid():
+				form.save()
+				user = form.cleaned_data.get('username')
+				messages.success(request, 'Account was created for ' + user)
+
+				return redirect('login')
+			
+
+		context = {'form':form}
+		return render(request, 'accounts/register.html', context)
+
+def loginPage(request):
+    if request.user.is_authenticated:
+        return redirect('homeview')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password =request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            print(user.id)
+
+            if user is not None:
+                login(request, user)
+                return redirect('homeview')
+            else:
+                messages.info(request, 'Username OR password is incorrect')
+        context = {}
+        return render(request, 'accounts/login.html', context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('login')
+
+def delete(request):
+	p = Post.objects.get(pk=request.POST.get('id', ''))
+	p.delete()
+	messages.info(request, 'Post deleted successfully')
+	return redirect('blog-home')
+
+def deleteitem(request, id):
+    p = Item.objects.get(pk=id)
+    p.delete()
+    return redirect('homeview')
