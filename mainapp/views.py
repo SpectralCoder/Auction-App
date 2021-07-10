@@ -51,14 +51,18 @@ def checkitem(request):
     x=logics.getItem()
     if request.method == 'POST':
         data=myform.ItemForm(request.POST, request.FILES)
+        print(data)
         if data.is_valid():
-            owner=User.objects.get(id=request.user.id)
+            print(request.user.id)
+            owner=User.objects.get(email=request.user.email)
+            print("here1")
             proname=data.cleaned_data['proname']
             minbid=data.cleaned_data['minbid']
             description=data.cleaned_data['description']
             date= data.cleaned_data['date']
             picture= data.cleaned_data['picture']
             logics.saveItem(proname, minbid, description, date, picture, owner)
+            print("here4")
             return render(request, 'home.html',{"ItemData" : x})
         return render(request, 'auctionItem.html')
     return HttpResponseForbidden('allowed only via POST')
@@ -66,14 +70,14 @@ def checkitem(request):
 #view for showing users posted items
 @login_required(login_url='login')
 def myitem(request):
-    owner=User.objects.get(id=request.user.id)
+    owner=User.objects.get(email=request.user.email)
     x=logics.getMyItem(owner)
     return render(request, 'home.html',{"ItemData" : x})
 
 #view for showing any individual item details
 @login_required(login_url='login')
 def individualdetails(request, id):
-    owner=User.objects.get(id=request.user.id)
+    owner=User.objects.get(email=request.user.email)
     postinfo= Item.objects.get(id=id)
     iteminfo= logics.getProduct(id)
     itembid =logics.getBid(postinfo)
@@ -94,7 +98,7 @@ def savebid(request, id):
 
         if data.is_valid():
             postinfo= Item.objects.get(id=id)
-            owner=User.objects.get(id=request.user.id)
+            owner= User.objects.get( email = request.user.email)
             mybid=data.cleaned_data['amount']
            
             highestbid= logics.getHighBid(postinfo)
@@ -172,22 +176,20 @@ class AdminStat(LoginRequiredMixin, TemplateView):
         "totalvalue": totalauction })
 
 def registerPage(request):
-	if request.user.is_authenticated:
-		return redirect('homeview')
-	else:
-		form = myform.CreateUserForm()
-		if request.method == 'POST':
-			form = myform.CreateUserForm(request.POST)
-			if form.is_valid():
-				form.save()
-				user = form.cleaned_data.get('username')
-				messages.success(request, 'Account was created for ' + user)
-
-				return redirect('login')
-			
-
-		context = {'form':form}
-		return render(request, 'accounts/register.html', context)
+    if request.user.is_authenticated:
+        return redirect('homeview')
+    else:
+        form = myform.CreateUserForm()
+        if request.method == 'POST':
+            form = myform.CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                email = logics.saveUser(form.cleaned_data.get('email'))
+                messages.success(request, 'Account was created for ' + user)
+                return redirect('login')
+        context = {'form':form}
+        return render(request, 'accounts/register.html', context)
 
 def loginPage(request):
     if request.user.is_authenticated:
